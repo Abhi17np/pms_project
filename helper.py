@@ -7,59 +7,23 @@ import streamlit as st
 from datetime import datetime, date
 from typing import List, Dict, Optional
 
-# Add this import if not already present
-from datetime import datetime, date
-from typing import List, Dict, Optional
-
-# Add this function to helper.py
-def calculate_progress(achieved: float, target: float) -> float:
-    """
-    Calculate progress percentage
-    
-    Args:
-        achieved: Achieved value
-        target: Target value
-        
-    Returns:
-        Progress percentage (capped at 100)
-    """
-    if target <= 0:
-        return 0.0
-    progress = (achieved / target) * 100
-    return min(progress, 100.0)
 # ============================================
 # TIME & DATE UTILITIES
 # ============================================
 
 def get_quarter_months(quarter: int) -> List[int]:
-    """
-    Get list of month numbers for a given quarter
-    
-    Args:
-        quarter: Quarter number (1-4)
-        
-    Returns:
-        List of month numbers
-    """
+    """Get list of month numbers for a given quarter"""
     quarter_map = {
-        1: [4, 5, 6],      # Q1: April-June
-        2: [7, 8, 9],      # Q2: July-September
-        3: [10, 11, 12],   # Q3: October-December
-        4: [1, 2, 3]       # Q4: January-March
+        1: [4, 5, 6],
+        2: [7, 8, 9],
+        3: [10, 11, 12],
+        4: [1, 2, 3]
     }
     return quarter_map.get(quarter, [])
 
 
 def get_month_name(month_num: int) -> str:
-    """
-    Get month name from month number
-    
-    Args:
-        month_num: Month number (1-12)
-        
-    Returns:
-        Month name
-    """
+    """Get month name from month number"""
     months = [
         "", "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
@@ -92,22 +56,13 @@ def get_quarter_name(quarter: int) -> str:
 
 
 def get_financial_year(date_obj: date = None) -> int:
-    """
-    Get financial year for a given date (April to March)
-    
-    Args:
-        date_obj: Date object, defaults to current date
-        
-    Returns:
-        Financial year
-    """
+    """Get financial year for a given date (April to March)"""
     if date_obj is None:
         date_obj = date.today()
     
     year = date_obj.year
     month = date_obj.month
     
-    # If month is Jan-Mar, financial year is previous year
     if month < 4:
         return year - 1
     return year
@@ -118,16 +73,7 @@ def get_financial_year(date_obj: date = None) -> int:
 # ============================================
 
 def calculate_progress(achieved: float, target: float) -> float:
-    """
-    Calculate progress percentage
-    
-    Args:
-        achieved: Achieved value
-        target: Target value
-        
-    Returns:
-        Progress percentage (capped at 100)
-    """
+    """Calculate progress percentage"""
     if target <= 0:
         return 0.0
     progress = (achieved / target) * 100
@@ -140,23 +86,15 @@ def calculate_total_achievement(week1: float, week2: float, week3: float, week4:
 
 
 def get_status_color(progress: float) -> str:
-    """
-    Get color based on progress percentage
-    
-    Args:
-        progress: Progress percentage
-        
-    Returns:
-        Color code
-    """
+    """Get color based on progress percentage"""
     if progress >= 90:
-        return "#10b981"  # Green
+        return "#10b981"
     elif progress >= 70:
-        return "#f59e0b"  # Amber
+        return "#3b82f6"
     elif progress >= 50:
-        return "#ef4444"  # Red
+        return "#f59e0b"
     else:
-        return "#6b7280"  # Gray
+        return "#ef4444"
 
 
 def format_number(value: float, decimals: int = 2) -> str:
@@ -165,410 +103,614 @@ def format_number(value: float, decimals: int = 2) -> str:
 
 
 # ============================================
-# THEME MANAGEMENT
+# MODERN PROFESSIONAL THEME
 # ============================================
-
 def apply_theme():
-    """Apply custom theme based on user preference with full styling"""
-    theme = st.session_state.get('theme', 'light')
-    """Apply custom theme based on user preference"""
-    theme = st.session_state.get('theme', 'light')
+    """Apply modern, clean, professional dashboard theme"""
+    st.markdown("""
+    <style>
+        /* Import Google Font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        /* ROOT VARIABLES */
+        :root {
+        --primary-bg: #f1f5f9;
+        --card-bg: #f8fafc;
+        --sidebar-bg: #1e293b;
+        --sidebar-hover: #334155;
 
-    
-    if theme == 'dark':
-        st.markdown("""
-        <style>
-        /* Dark Mode Styles */
-        .stApp {
-            background-color: #0e1117;
-            color: #fafafa;
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --text-muted: #94a3b8;
+
+        --border-color: #e2e8f0;
+
+        --accent-blue: #3b82f6;
+        --accent-green: #22c55e;
+        --accent-orange: #f59e0b;
+        --accent-red: #ef4444;
+        --accent-purple: #8b5cf6;
+    }
+
+
+        /* GLOBAL STYLES */
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
-        
-        .stMarkdown, .stText {
-            color: #fafafa !important;
+
+        html, body, .stApp {
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
         }
-        
-        /* Sidebar Dark Mode */
+
+        /* REMOVE DEFAULT STREAMLIT PADDING */
+        .block-container {
+            padding: 2rem 2rem 3rem 2rem;
+            max-width: 100%;
+        }
+
+        /* HEADINGS */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-primary);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        /* SIDEBAR STYLING */
         section[data-testid="stSidebar"] {
-            background-color: #262730 !important;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            border-right: 1px solid rgba(255,255,255,0.1);
         }
-        
-        section[data-testid="stSidebar"] .stMarkdown {
-            color: #fafafa !important;
+
+        section[data-testid="stSidebar"] > div:first-child {
+            padding-top: 1rem;
         }
-        
-        /* Cards Dark Mode */
-        .metric-card, .hierarchy-card, .month-card {
-            background: #1e1e1e !important;
-            color: #fafafa !important;
-            border: 1px solid #333 !important;
+
+        /* Sidebar buttons */
+        section[data-testid="stSidebar"] button {
+            background-color: transparent;
+            border: none;
+            color: #e2e8f0;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            width: 100%;
+            text-align: left;
+            margin: 2px 0;
         }
-        
-        /* Input fields Dark Mode */
-        .stTextInput input, .stTextArea textarea, .stSelectbox select {
-            background-color: #262730 !important;
-            color: #fafafa !important;
-            border-color: #444 !important;
+
+        section[data-testid="stSidebar"] button:hover {
+            background-color: var(--sidebar-hover);
+            color: white;
+            transform: translateX(2px);
         }
-        
-        /* Buttons Dark Mode */
-        .stButton button {
-            background-color: #262730 !important;
-            color: #fafafa !important;
-            border: 1px solid #444 !important;
+
+        /* METRIC CARDS */
+        [data-testid="stMetricValue"] {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
         }
-        
-        .stButton button:hover {
-            background-color: #333 !important;
-            border-color: #666 !important;
+
+        [data-testid="stMetricLabel"] {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        
-        /* DataFrames Dark Mode */
-        .stDataFrame, [data-testid="stDataFrame"] {
-            background-color: #1e1e1e !important;
+
+        /* CUSTOM CARD STYLES */
+        .metric-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 28px 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            height: 100%;
         }
-        
-        /* Expanders Dark Mode */
-        .streamlit-expanderHeader {
-            background-color: #262730 !important;
-            color: #fafafa !important;
+
+        .metric-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+            border-color: #e0e7ff;
         }
-        
-        /* Tables Dark Mode */
+
+        .metric-card-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .metric-card-value {
+            font-size: 42px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .metric-card-delta {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        /* ICON CONTAINER IN METRIC CARDS */
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .metric-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* CARDS - HIERARCHY, MONTH, GENERAL */
+        .hierarchy-card,
+        .month-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .hierarchy-card:hover,
+        .month-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+            border-color: var(--accent-blue);
+        }
+
+        .month-card {
+            text-align: center;
+        }
+
+        /* PROGRESS BARS */
+        .pms-progress-container {
+            background-color: #e2e8f0;
+            height: 8px;
+            border-radius: 999px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .pms-progress-bar {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+        }
+
+        /* TABLES & DATAFRAMES */
+        [data-testid="stDataFrame"] {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
         table {
-            background-color: #1e1e1e !important;
-            color: #fafafa !important;
+            border-collapse: separate;
+            border-spacing: 0;
         }
-        
-        th {
-            background-color: #262730 !important;
-            color: #fafafa !important;
+
+        thead tr th {
+            background: #f8fafc !important;
+            font-weight: 600 !important;
+            font-size: 12px !important;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary) !important;
+            border-bottom: 2px solid var(--border-color) !important;
+            padding: 16px 12px !important;
         }
-        
-        td {
-            background-color: #1e1e1e !important;
-            color: #fafafa !important;
-            border-color: #444 !important;
+
+        tbody tr {
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s ease;
         }
-        
-        /* Info/Warning/Success boxes */
-        .stAlert {
-            background-color: #262730 !important;
-            color: #fafafa !important;
+
+        tbody tr:hover {
+            background: #f8fafc;
         }
-        </style>
-        """, unsafe_allow_html=True)
-    else:
-        """Apply clean professional light blue theme across the app"""
-        st.markdown("""
-        <style>
-            /* ------------------ FONT & BACKGROUND ------------------ */
-            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-            html, body, [class*="css"]  {
-                font-family: 'Inter', sans-serif;
-                background-color: #F8FAFC; /* very light grey-blue background */
-            }
+        tbody td {
+            padding: 16px 12px !important;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
 
-            /* ------------------ SIDEBAR ------------------ */
-            [data-testid="stSidebar"] {
-                background: linear-gradient(180deg, #FFFFFF 0%, #F0F9FF 100%);
-                border-right: 1px solid #E2E8F0;
-            }
-
-            /* ------------------ HEADINGS ------------------ */
-            h1, h2, h3, h4, h5, h6 {
-                color: #1E3A8A;
-                font-weight: 700;
-            }
-
-            /* ------------------ BUTTONS ------------------ */
-            .stButton>button {
-            background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+        /* BUTTONS */
+        .stButton button {
+            background: var(--accent-blue);
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 6px 0;              /* ✅ smaller vertical padding */
-            height: 42px;                /* ✅ fixed consistent height */
-            font-size: 0.95rem;
-            font-weight: 600;
-            transition: 0.3s ease;
-            box-shadow: 0 3px 8px rgba(59,130,246,0.15);
+            padding: 10px 24px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
         }
 
-            .stButton>button:hover {
-                background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
-                box-shadow: 0 6px 16px rgba(59,130,246,0.35);
-                transform: translateY(-2px);
-            }
+        .stButton button:hover {
+            background: #2563eb;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
 
-            /* ------------------ INPUTS ------------------ */
-            input, textarea, select {
-                background-color: #FFFFFF !important;
-                border: 1px solid #CBD5E1 !important;
-                border-radius: 8px !important;
-                color: #0F172A !important;
-                padding: 0.5rem !important;
-            }
+        button[kind="primary"] {
+            background: var(--accent-blue) !important;
+        }
 
-            /* ------------------ TABS ------------------ */
-            .stTabs [data-baseweb="tab"] {
-                background: #E0F2FE;
-                border-radius: 8px;
-                color: #1E3A8A;
-                padding: 10px 16px;
-                font-weight: 600;
-            }
+        button[kind="secondary"] {
+            background: var(--card-bg) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border-color) !important;
+        }
 
-            .stTabs [aria-selected="true"] {
-                background: #3B82F6;
-                color: white;
-            }
+        /* INPUT FIELDS */
+        .stTextInput input,
+        .stTextArea textarea,
+        .stSelectbox select,
+        .stNumberInput input {
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
 
-            /* ------------------ METRICS ------------------ */
-            [data-testid="stMetricValue"] {
-                color: #1E3A8A !important;
-            }
+        .stTextInput input:focus,
+        .stTextArea textarea:focus,
+        .stSelectbox select:focus,
+        .stNumberInput input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
-            /* ------------------ PROGRESS BAR ------------------ */
-            .stProgress > div > div > div > div {
-                background: linear-gradient(90deg, #3B82F6, #60A5FA);
-            }
+        /* EXPANDERS */
+        .streamlit-expanderHeader {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+            padding: 14px 18px;
+        }
 
-            /* ------------------ BLUE CARDS (YEAR / QUARTER / MONTH) ------------------ */
-            .hierarchy-card {
-                background: linear-gradient(180deg, #DBEAFE 0%, #BFDBFE 100%);
-                
-                border-radius: 20px;
-                padding: 28px;
-                margin-bottom: 20px;
-                transition: all 0.3s ease;
-                cursor: pointer;
-                box-shadow: 0 4px 10px rgba(59,130,246,0.15);
-                text-align: center;
-            }
+        .streamlit-expanderHeader:hover {
+            border-color: var(--accent-blue);
+        }
 
-            .hierarchy-card:hover {
-                background: linear-gradient(180deg, #BFDBFE 0%, #93C5FD 100%);
-                border-color: #3B82F6;
-                box-shadow: 0 8px 18px rgba(59,130,246,0.25);
-                transform: translateY(-5px);
-            }
+        /* ALERTS */
+        .stAlert {
+            border-radius: 8px;
+            border-left: 4px solid;
+            padding: 14px 18px;
+            font-size: 14px;
+        }
 
-            .hierarchy-card h2 {
-                color: #1E3A8A;
-                font-size: 1.5rem;
-                font-weight: 700;
-                margin: 0;
-            }
+        [data-testid="stAlert"][data-baseweb="notification-info"] {
+            background: #dbeafe;
+            border-left-color: var(--accent-blue);
+        }
 
-            .hierarchy-card p {
-                color: #1E40AF;
-                font-size: 0.95rem;
-                margin-top: 8px;
-                font-weight: 500;
-            }
+        [data-testid="stAlert"][data-baseweb="notification-positive"] {
+            background: #d1fae5;
+            border-left-color: var(--accent-green);
+        }
 
-            /* ------------------ MONTH CARDS ------------------ */
-            .month-card {
-                background: linear-gradient(180deg, #DBEAFE 0%, #BFDBFE 100%);
-                
-                border-radius: 20px;
-                padding: 24px;
-                text-align: center;
-                height: 200px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-bottom: 20px;
-                transition: all 0.3s ease;
-                box-shadow: 0 4px 10px rgba(59,130,246,0.15);
-            }
+        [data-testid="stAlert"][data-baseweb="notification-warning"] {
+            background: #fef3c7;
+            border-left-color: var(--accent-orange);
+        }
 
-            .month-card:hover {
-                background: linear-gradient(180deg, #BFDBFE 0%, #93C5FD 100%);
-                border-color: #2563EB;
-                box-shadow: 0 8px 18px rgba(59,130,246,0.3);
-                transform: translateY(-5px);
-            }
+        [data-testid="stAlert"][data-baseweb="notification-error"] {
+            background: #fee2e2;
+            border-left-color: var(--accent-red);
+        }
 
-            .month-card-content h2 {
-                color: #1E3A8A;
-                font-size: 1.4rem;
-                font-weight: 700;
-                margin: 0;
-            }
+        /* TABS */
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 8px;
+            border-bottom: 2px solid var(--border-color);
+        }
 
-            .month-card-content p {
-                color: #1E40AF;
-                margin-top: 8px;
-                font-size: 1rem;
-                font-weight: 500;
-            }
+        .stTabs [data-baseweb="tab"] {
+            border-radius: 8px 8px 0 0;
+            padding: 12px 24px;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-secondary);
+            border: none;
+        }
 
-            /* ------------------ BLUE HOVER GLOW ------------------ */
-            .hierarchy-card:hover, .month-card:hover {
-                box-shadow: 0 0 12px rgba(59,130,246,0.4);
-            }
+        .stTabs [aria-selected="true"] {
+            background: var(--card-bg);
+            color: var(--accent-blue);
+            border-bottom: 2px solid var(--accent-blue);
+        }
 
-            /* ------------------ SCROLLBAR ------------------ */
-            ::-webkit-scrollbar {
-                width: 8px;
-            }
-            ::-webkit-scrollbar-thumb {
-                background: #93C5FD;
-                border-radius: 4px;
-            }
-            ::-webkit-scrollbar-thumb:hover {
-                background: #3B82F6;
-            }
-            /* ✅ Make all metric rows stay single-line and shrink evenly */
-            section[data-testid="stHorizontalBlock"],
-            div[data-testid="stHorizontalBlock"],
-            div[data-testid="column"],
-            section[data-testid="stVerticalBlock"] div[data-testid="stHorizontalBlock"] {
-                display: flex !important;
-                flex-wrap: nowrap !important;           /* don't wrap */
-                justify-content: space-between !important;
-                align-items: stretch !important;
-                gap: 18px !important;
-            }
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
 
-            /* Make all columns inside those blocks flexible */
-            section[data-testid="stHorizontalBlock"] > div,
-            div[data-testid="stHorizontalBlock"] > div,
-            div[data-testid="column"] > div {
-                flex: 1 1 auto !important;
-                min-width: 0 !important;                /* allow shrinking */
-                max-width: 100% !important;
-            }
+        ::-webkit-scrollbar-track {
+            background: var(--primary-bg);
+        }
 
-            /* Handle cards inside expanders or containers (like employee / analytics) */
-            div[data-testid="stVerticalBlock"] div[data-testid="stHorizontalBlock"] > div {
-                flex: 1 1 auto !important;
-                min-width: 0 !important;
-            }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 5px;
+        }
 
-            /* Keep metrics consistent height */
-            [data-testid="stMetricValue"] {
-                white-space: nowrap !important;
-                overflow: hidden !important;
-                text-overflow: ellipsis !important;
-            }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
 
-        </style>
-        """, unsafe_allow_html=True)
-
-
+        /* DIVIDER */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 24px 0;
+        }
+    </style>
+    """, unsafe_allow_html=True)
 
 
 # ============================================
-# UI COMPONENTS
+# PROFESSIONAL UI COMPONENTS
 # ============================================
 
 def render_user_avatar(user: Dict):
-    """
-    Render user avatar and info in sidebar
-    
-    Args:
-        user: User dictionary
-    """
+    """Modern professional user avatar"""
+    initial = user['name'][0].upper() if user.get('name') else "U"
+    role = user.get('role', 'User')
+    designation = user.get('designation', 'Employee')
+
+    # Role color mapping
+    role_colors = {
+        'HR': '#8b5cf6',
+        'Manager': '#3b82f6',
+        'Employee': '#10b981'
+    }
+    role_color = role_colors.get(role, '#64748b')
+
     st.markdown(f"""
-    <div style='text-align: center; padding: 20px;'>
-        <div style='width: 80px; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; 
-                    justify-content: center; color: white; font-size: 32px; font-weight: bold;'>
-            {user['name'][0].upper()}
+    <div style="padding: 24px 16px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <div style="
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, {role_color}, #1e293b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        ">
+            {initial}
         </div>
-        <h3 style='margin: 0;'>{user['name']}</h3>
-        <p style='color: #64748b; margin: 5px 0;'>{user.get('designation', 'Employee')}</p>
-        <span style='background: #dbeafe; color: #1e40af; padding: 5px 15px; 
-                     border-radius: 15px; font-size: 12px; font-weight: 600;'>
-            {user['role']}
-        </span>
+        <div style="font-size: 16px; font-weight: 600; color: #f1f5f9; margin-bottom: 4px;">
+            {user.get('name', '')}
+        </div>
+        <div style="font-size: 12px; color: #94a3b8; margin-bottom: 8px;">
+            {designation}
+        </div>
+        <div style="
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: {role_color};
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        ">
+            {role}
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
 
-def render_card(title: str, subtitle: str = "", icon: str = "📊"):
-    """
-    Render a card component
+def render_metric_card(
+    label: str,
+    value: str,
+    color: str = "#3b82f6",
+    delta: Optional[str] = None,
+):
+    """Clean, professional metric card without icons"""
     
-    Args:
-        title: Card title
-        subtitle: Card subtitle
-        icon: Emoji icon
-    """
-    st.markdown(f"""
-    <div class='hierarchy-card'>
-        <h2 style='margin:0;'>{icon} {title}</h2>
-        <p style='color: #64748b; margin-top: 8px;'>{subtitle}</p>
-    </div>
-    """, unsafe_allow_html=True)
+    delta_html = ""
+    if delta:
+        delta_color = "#10b981" if "+" in str(delta) else "#ef4444"
+        delta_html = f"<div class='metric-card-delta' style='color: {delta_color};'>{delta}</div>"
 
-
-def render_metric_card(label: str, value: str, delta: Optional[str] = None, color: str = "#3b82f6"):
-    """Render a metric card with optional delta"""
-    delta_html = f"<p style='color: {color}; font-size: 14px; margin: 5px 0 0 0;'>{delta}</p>" if delta else ""
-    
     st.markdown(f"""
-    <div style='background: linear-gradient(135deg, {color}15 0%, {color}05 100%); 
-                padding: 24px; border-radius: 16px; font-family: 'Inter', sans-serif;
-                border-left: 4px solid {color};'>
-        <p style='color: #64748b; font-size: 14px; margin: 0;'>{label}</p>
-        <h2 style='margin: 10px 0 0 0;'>{value}</h2>
+    <div class="metric-card">
+        <div class="metric-card-title" style="color: {color};">{label}</div>
+        <div class="metric-card-value">{value}</div>
         {delta_html}
     </div>
     """, unsafe_allow_html=True)
 
 
-def render_progress_bar(progress: float, label: str = ""):
-    """Render a custom progress bar"""
-    color = get_status_color(progress)
-    
+def render_card(title: str, subtitle: str = "", icon: str = ""):
+    """Professional standalone card component (fully reliable styling)"""
+
+    # Icon HTML (optional)
+    icon_html = (
+        f"<span style='margin-right: 10px; color: #3b82f6; font-size: 20px;'>{icon}</span>"
+        if icon else ""
+    )
+
     st.markdown(f"""
-    <div style='margin: 10px 0;'>
-        <div style='display: flex; justify-content: space-between; margin-bottom: 5px;'>
-            <span>{label}</span>
-            <span style='font-weight: 600;'>{progress:.1f}%</span>
+    <div style="
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 20px 24px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0px 2px 4px rgba(0,0,0,0.05);
+        transition: all 0.2s ease-in-out;
+        margin-bottom: 12px;
+    "
+        onmouseover="this.style.boxShadow='0px 6px 12px rgba(0,0,0,0.10)'; this.style.transform='translateY(-2px)';"
+        onmouseout="this.style.boxShadow='0px 2px 4px rgba(0,0,0,0.05)'; this.style.transform='translateY(0px)';"
+    >
+        <!-- Title -->
+        <div style="
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        ">
+            {icon_html}{title}
         </div>
-        <div style='background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden;'>
-            <div style='background: {color}; height: 100%; width: {progress}%; transition: width 0.3s;'></div>
+
+        <!-- Subtitle -->
+        <div style="
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+        ">
+            {subtitle}
         </div>
     </div>
     """, unsafe_allow_html=True)
 
 
+def render_progress_bar(progress: float, label: str = ""):
+    """Professional, standalone progress bar component"""
+
+    color = get_status_color(progress)
+
+    st.markdown(f"""
+    <div style="
+        margin: 18px 0;
+        width: 100%;
+    ">
+
+        <!-- Label + Percentage -->
+        <div style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        ">
+            <span style="
+                font-size: 13px;
+                font-weight: 600;
+                color: #475569;
+            ">{label}</span>
+
+            <span style="
+                font-size: 14px;
+                font-weight: 700;
+                color: {color};
+            ">{progress:.1f}%</span>
+        </div>
+
+        <!-- Progress Bar Container -->
+        <div style="
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+        ">
+
+            <!-- Actual Bar -->
+            <div style="
+                width: {progress}%;
+                height: 100%;
+                background: {color};
+                border-radius: 10px;
+                transition: width 0.4s ease-in-out;
+            ">
+            </div>
+
+        </div>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+
 def render_feedback_card(feedback: Dict, feedback_type: str):
-    """
-    Render a feedback card
-    
-    Args:
-        feedback: Feedback dictionary
-        feedback_type: Type of feedback (Manager, HR, Self Appraisal)
-    """
+    """Modern feedback card"""
     color_map = {
         'Manager': '#3b82f6',
         'HR': '#10b981',
         'Self Appraisal': '#f59e0b'
     }
     
-    color = color_map.get(feedback_type, '#6b7280')
-    stars = '⭐' * feedback.get('rating', 3)
+    color = color_map.get(feedback_type, '#64748b')
+    stars = '★' * feedback.get('rating', 3) + '☆' * (5 - feedback.get('rating', 3))
     
     user_name = feedback.get('users', {}).get('name', 'Unknown')
     date_str = feedback.get('date', '')
     comment = feedback.get('comment', '')
     
     st.markdown(f"""
-    <div style='background: {color}15; padding: 15px; border-radius: 12px; 
-                border-left: 4px solid {color}; margin: 10px 0;'>
-        <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;'>
-            <strong>{user_name}</strong>
-            <span style='color: #64748b; font-size: 12px;'>{date_str}</span>
+    <div style='
+        background: {color}08;
+        border: 1px solid {color}30;
+        border-left: 4px solid {color};
+        border-radius: 12px;
+        padding: 20px;
+        margin: 12px 0;
+        transition: all 0.3s ease;
+    '>
+        <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;'>
+            <div>
+                <div style='font-weight: 600; color: #0f172a; font-size: 15px;'>{user_name}</div>
+                <div style='color: #64748b; font-size: 12px; margin-top: 2px;'>{date_str}</div>
+            </div>
+            <div style='color: {color}; font-size: 18px;'>{stars}</div>
         </div>
-        <p style='margin: 10px 0;'>{comment}</p>
-        <div style='margin-top: 10px;'>{stars}</div>
+        <p style='margin: 0; color: #334155; font-size: 14px; line-height: 1.6;'>{comment}</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -590,12 +732,7 @@ def validate_date_range(start_date: date, end_date: date) -> bool:
 
 
 def validate_goal_data(goal_data: Dict) -> tuple[bool, str]:
-    """
-    Validate goal data before submission
-    
-    Returns:
-        (is_valid, error_message)
-    """
+    """Validate goal data before submission"""
     required_fields = ['goal_title', 'start_date', 'end_date']
     
     for field in required_fields:
@@ -613,15 +750,7 @@ def validate_goal_data(goal_data: Dict) -> tuple[bool, str]:
 # ============================================
 
 def format_goal_table_data(goals: List[Dict]) -> List[Dict]:
-    """
-    Format goals data for table display
-    
-    Args:
-        goals: List of goal dictionaries
-        
-    Returns:
-        Formatted list for DataFrame
-    """
+    """Format goals data for table display"""
     table_data = []
     for goal in goals:
         table_data.append({
@@ -645,16 +774,7 @@ def format_goal_table_data(goals: List[Dict]) -> List[Dict]:
 
 
 def export_to_csv(data: List[Dict], filename: str) -> str:
-    """
-    Export data to CSV format
-    
-    Args:
-        data: List of dictionaries
-        filename: Output filename
-        
-    Returns:
-        CSV string
-    """
+    """Export data to CSV format"""
     import pandas as pd
     df = pd.DataFrame(data)
     return df.to_csv(index=False)
@@ -686,5 +806,4 @@ def reset_navigation():
     st.session_state.selected_year = datetime.now().year
     st.session_state.selected_quarter = None
     st.session_state.selected_month = None
-
-
+    
