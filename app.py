@@ -2,9 +2,9 @@
 Performance Management System - Main Application
 A comprehensive PMS built with Streamlit and Supabase
 """
+
 import sys
 sys.setrecursionlimit(3000)
-
 import streamlit as st
 import pandas as pd
 from datetime import datetime, date, timedelta
@@ -35,6 +35,28 @@ import secrets
 import os
 from datetime import datetime, timedelta
 import streamlit.components.v1 as components
+
+st.markdown("""
+<style>
+
+.q-btn-wrapper div[data-testid="baseButton-secondary"] {
+    background-color: #475569; /* Slate grey */
+    color: white !important;
+    border-radius: 8px !important;
+    border: 1px solid #334155 !important;
+    padding: 10px 14px !important;
+    font-weight: 600 !important;
+    transition: 0.2s ease-in-out;
+}
+
+.q-btn-wrapper div[data-testid="baseButton-secondary"]:hover {
+    background-color: #334155 !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
 
 def check_password_strength(password):
     """Check password strength and return score, color, and feedback"""
@@ -629,7 +651,7 @@ def display_analytics_page():
     
     # Overview Tab
     if view_type == "Overview":
-        st.subheader(f"📈 Performance Overview - {analysis_user['name']}")
+        st.subheader(f"Performance Overview - {analysis_user['name']}")
         
         # KPI Cards
         col1, col2, col3, col4, col5 = st.columns(5)
@@ -685,7 +707,7 @@ def display_analytics_page():
     
     # Trends Tab
     elif view_type == "Trends":
-        st.subheader(f"📈 Performance Trends - {analysis_user['name']}")
+        st.subheader(f"Performance Trends - {analysis_user['name']}")
         
         trend_data = get_trend_data(analysis_user['id'], months=6)
         
@@ -769,7 +791,7 @@ def display_analytics_page():
                         comp_metrics = calculate_performance_metrics(comp_goals)
                         is_current = (comp_user['id'] == analysis_user['id'])
                         comparison_data.append({
-                            'Name': f"⭐ {comp_user['name']}" if is_current else comp_user['name'],
+                            'Name': f" {comp_user['name']}" if is_current else comp_user['name'],
                             'Display_Name': comp_user['name'],
                             'Total Goals': comp_metrics['total_goals'],
                             'Completion Rate': comp_metrics['completion_rate'],
@@ -782,7 +804,7 @@ def display_analytics_page():
                     df_compare = pd.DataFrame(comparison_data)
                     
                     # Highlight current user
-                    st.success(f"📍 **{analysis_user['name']}** is highlighted with ⭐ in the comparisons below")
+                    st.success(f" **{analysis_user['name']}** is highlighted with ⭐ in the comparisons below")
                     
                     # Comparison bar chart
                     fig_compare = px.bar(
@@ -807,7 +829,7 @@ def display_analytics_page():
                     st.markdown("---")
                     
                     # Comparison table with ranking
-                    st.subheader("📊 Detailed Comparison Table")
+                    st.subheader(" Detailed Comparison Table")
                     
                     # Sort by completion rate for ranking
                     df_sorted = df_compare.sort_values('Completion Rate', ascending=False).reset_index(drop=True)
@@ -822,7 +844,7 @@ def display_analytics_page():
                     
                     # Performance insights
                     st.markdown("---")
-                    st.subheader("💡 Performance Insights")
+                    st.subheader(" Performance Insights")
                     
                     # Calculate metrics correctly
                     avg_completion = df_compare['Completion Rate'].mean()
@@ -851,40 +873,40 @@ def display_analytics_page():
                             st.markdown("**Completion Rate Analysis:**")
                             diff = user_completion - avg_completion
                             if diff > 0:
-                                st.success(f"✅ **Above Average**\n\n{analysis_user['name']}'s completion rate: **{user_completion:.1f}%**\n\nGroup average: **{avg_completion:.1f}%**\n\nDifference: **+{diff:.1f}%** higher")
+                                st.success(f"**Above Average**\n\n{analysis_user['name']}'s completion rate: **{user_completion:.1f}%**\n\nGroup average: **{avg_completion:.1f}%**\n\nDifference: **+{diff:.1f}%** higher")
                             elif diff < 0:
                                 st.warning(f"⚠️ **Below Average**\n\n{analysis_user['name']}'s completion rate: **{user_completion:.1f}%**\n\nGroup average: **{avg_completion:.1f}%**\n\nDifference: **{abs(diff):.1f}%** lower")
                             else:
-                                st.info(f"📊 **Average Performance**\n\n{analysis_user['name']}'s completion rate: **{user_completion:.1f}%**\n\nMatches group average: **{avg_completion:.1f}%**")
+                                st.info(f" **Average Performance**\n\n{analysis_user['name']}'s completion rate: **{user_completion:.1f}%**\n\nMatches group average: **{avg_completion:.1f}%**")
                         
                         with col_insight2:
                             st.markdown("**Progress Analysis:**")
                             prog_diff = user_progress - avg_progress
                             if prog_diff > 0:
-                                st.success(f"✅ **Above Average**\n\n{analysis_user['name']}'s avg progress: **{user_progress:.1f}%**\n\nGroup average: **{avg_progress:.1f}%**\n\nDifference: **+{prog_diff:.1f}%** higher")
+                                st.success(f" **Above Average**\n\n{analysis_user['name']}'s avg progress: **{user_progress:.1f}%**\n\nGroup average: **{avg_progress:.1f}%**\n\nDifference: **+{prog_diff:.1f}%** higher")
                             elif prog_diff < 0:
-                                st.warning(f"⚠️ **Below Average**\n\n{analysis_user['name']}'s avg progress: **{user_progress:.1f}%**\n\nGroup average: **{avg_progress:.1f}%**\n\nDifference: **{abs(prog_diff):.1f}%** lower")
+                                st.warning(f"**Below Average**\n\n{analysis_user['name']}'s avg progress: **{user_progress:.1f}%**\n\nGroup average: **{avg_progress:.1f}%**\n\nDifference: **{abs(prog_diff):.1f}%** lower")
                             else:
-                                st.info(f"📊 **Average Performance**\n\n{analysis_user['name']}'s avg progress: **{user_progress:.1f}%**\n\nMatches group average: **{avg_progress:.1f}%**")
+                                st.info(f"**Average Performance**\n\n{analysis_user['name']}'s avg progress: **{user_progress:.1f}%**\n\nMatches group average: **{avg_progress:.1f}%**")
                         
                         # Top performer
                         st.markdown("---")
                         top_performer = df_sorted.iloc[0]
                         if top_performer['Is_Current']:
-                            st.success(f"🏆 **Congratulations!** {analysis_user['name']} has the highest completion rate ({top_performer['Completion Rate']:.1f}%) in the group!")
+                            st.success(f" **Congratulations!** {analysis_user['name']} has the highest completion rate ({top_performer['Completion Rate']:.1f}%) in the group!")
                         else:
-                            st.info(f"🏆 **Top Performer:** {top_performer['Display_Name']} leads with **{top_performer['Completion Rate']:.1f}%** completion rate")
+                            st.info(f"**Top Performer:** {top_performer['Display_Name']} leads with **{top_performer['Completion Rate']:.1f}%** completion rate")
                     
                 else:
                     st.info("No comparison data available - users need to have goals to be included in comparison")
             else:
                 st.info(f"No {comparison_title.lower()} available for comparison")
         else:
-            st.warning("⚠️ Comparison view is only available for HR and Managers")
+            st.warning(" Comparison view is only available for HR and Managers")
     
     # Detailed Tab
     elif view_type == "Detailed":
-        st.subheader(f"📋 Detailed Goal Analysis - {analysis_user['name']}")
+        st.subheader(f" Detailed Goal Analysis - {analysis_user['name']}")
         
         # Goals breakdown by status
         st.markdown("### Goals by Status")
@@ -946,16 +968,16 @@ def display_analytics_page():
     
     # Export Report
     st.markdown("---")
-    st.subheader("📥 Export Report")
+    st.subheader("Export Report")
     
     col_export1, col_export2, col_export3 = st.columns(3)
     
     with col_export1:
-        if st.button("📄 Export to PDF", use_container_width=True):
+        if st.button("Export to PDF", use_container_width=True):
             with st.spinner("Generating PDF report..."):
                 pdf_buffer = generate_performance_report_pdf(analysis_user, goals, analysis_period)
                 st.download_button(
-                    label="📥 Download PDF Report",
+                    label=" Download PDF Report",
                     data=pdf_buffer,
                     file_name=f"Performance_Report_{analysis_user['name']}_{datetime.now().strftime('%Y%m%d')}.pdf",
                     mime="application/pdf",
@@ -963,7 +985,7 @@ def display_analytics_page():
                 )
     
     with col_export2:
-        if st.button("📊 Export to Excel", use_container_width=True):
+        if st.button(" Export to Excel", use_container_width=True):
             # Create Excel with metrics
             excel_buffer = export_goals_to_excel(analysis_user['id'], 
                                                  goals[0]['year'] if goals else date.today().year,
@@ -971,7 +993,7 @@ def display_analytics_page():
                                                  goals[0].get('month', 1) if goals else 1)
             if excel_buffer:
                 st.download_button(
-                    label="📥 Download Excel Report",
+                    label="Download Excel Report",
                     data=excel_buffer,
                     file_name=f"Goals_Report_{analysis_user['name']}_{datetime.now().strftime('%Y%m%d')}.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -1025,7 +1047,7 @@ def display_auto_complete_banner():
             
             st.info(f"You have **{len(completable_goals)} goal(s)** at 100% progress")
             
-            with st.expander(f"📋 View {len(completable_goals)} Completable Goals", expanded=True):
+            with st.expander(f"View {len(completable_goals)} Completable Goals", expanded=True):
                 for goal in completable_goals:
                     col1, col2, col3 = st.columns([3, 1, 1])
                     
@@ -1034,10 +1056,10 @@ def display_auto_complete_banner():
                         st.caption(f"Target: {goal.get('monthly_target', 0)}")
                     
                     with col2:
-                        st.success("100% ✅")
+                        st.success("100% ")
                     
                     with col3:
-                        if st.button("✅ Complete", key=f"complete_{goal['goal_id']}", use_container_width=True):
+                        if st.button("Complete", key=f"complete_{goal['goal_id']}", use_container_width=True):
                             if auto_complete_goal(goal['goal_id'], completed_by=user['id']):
                                 st.success(f"Completed!")
                                 st.rerun()
@@ -1047,15 +1069,15 @@ def display_auto_complete_banner():
                 col_bulk1, col_bulk2 = st.columns(2)
                 
                 with col_bulk1:
-                    if st.button("✅ Complete All", type="primary", use_container_width=True):
+                    if st.button(" Complete All", type="primary", use_container_width=True):
                         for goal in completable_goals:
                             auto_complete_goal(goal['goal_id'], completed_by=user['id'])
-                        st.success(f"✅ Completed {len(completable_goals)} goals!")
+                        st.success(f"Completed {len(completable_goals)} goals!")
                         st.balloons()
                         st.rerun()
                 
                 with col_bulk2:
-                    if st.button("⏭️ Remind Later", use_container_width=True):
+                    if st.button("⏭Remind Later", use_container_width=True):
                         st.rerun()
 
 def calculate_performance_score(stats):
@@ -1205,7 +1227,7 @@ def get_average_ranking(manager_id, employee_id, months=6):
 
 def display_team_rankings_dashboard(manager_id):
     """Display team rankings in manager dashboard"""
-    st.subheader("🏆 Team Performance Rankings")
+    st.subheader(" Team Performance Rankings")
     
     # Month selector
     col_month1, col_month2, col_month3 = st.columns([2, 1, 1])
@@ -1228,13 +1250,13 @@ def display_team_rankings_dashboard(manager_id):
         )
     
     with col_month3:
-        if st.button("💾 Save Rankings", use_container_width=True, 
+        if st.button(" Save Rankings", use_container_width=True, 
                     help="Save current month's rankings to history"):
             if save_monthly_rankings(manager_id, selected_year, selected_month):
-                st.success(f"✅ Rankings saved for {get_month_name(selected_month)} {selected_year}")
+                st.success(f" Rankings saved for {get_month_name(selected_month)} {selected_year}")
                 st.rerun()
             else:
-                st.error("❌ Failed to save rankings")
+                st.error(" Failed to save rankings")
     
     # Get rankings
     rankings = get_current_team_rankings(manager_id, selected_year, selected_month)
@@ -1247,7 +1269,7 @@ def display_team_rankings_dashboard(manager_id):
     
     # Top 3 Podium Display
     if len(rankings) >= 3:
-        st.markdown("### 🎖️ Top Performers")
+        st.markdown("###  Top Performers")
         col_2nd, col_1st, col_3rd = st.columns([1, 1, 1])
         
         with col_1st:
@@ -1286,7 +1308,7 @@ def display_team_rankings_dashboard(manager_id):
         st.markdown("---")
     
     # Full Rankings Table
-    st.markdown("### 📊 Complete Rankings")
+    st.markdown("###  Complete Rankings")
     
     # Create DataFrame for display
     ranking_data = []
@@ -1372,7 +1394,7 @@ def display_team_rankings_dashboard(manager_id):
     
     # Individual Performance History
     st.markdown("---")
-    st.markdown("### 📈 Individual Performance History")
+    st.markdown("### Individual Performance History")
     
     selected_member = st.selectbox(
         "Select Team Member",
@@ -1447,7 +1469,7 @@ def display_team_rankings_dashboard(manager_id):
             avg_stats = get_average_ranking(manager_id, employee_id, months=6)
             
             if avg_stats:
-                st.markdown("**📊 6-Month Statistics**")
+                st.markdown("**6-Month Statistics**")
                 st.metric("Average Rank", f"#{avg_stats['avg_rank']:.1f}")
                 st.metric("Best Rank", f"#{avg_stats['best_rank']}")
                 st.metric("Worst Rank", f"#{avg_stats['worst_rank']}")
@@ -1483,7 +1505,7 @@ def render_password_strength_meter(password, key_suffix=""):
     
     # Show feedback if password is not very strong
     if score < 85 and feedback:
-        with st.expander("💡 Tips to strengthen your password", expanded=False):
+        with st.expander(" Tips to strengthen your password", expanded=False):
             for tip in feedback:
                 st.markdown(f"- {tip}")
             
@@ -1556,7 +1578,7 @@ def send_password_reset_email(email, reset_token):
         return False
 
 
-# ✅ PAGE CONFIG MUST BE FIRST STREAMLIT COMMAND
+# PAGE CONFIG MUST BE FIRST STREAMLIT COMMAND
 st.set_page_config(
     page_title="Performance Management System",
     page_icon="🎯",
@@ -1570,35 +1592,22 @@ load_dotenv()
 # Initialize Supabase client ONCE
 supabase = get_supabase_client()
 
+from helper import apply_theme
+apply_theme()
 
 # Import our modules
 from database import Database
 from helper import (
-    apply_theme, init_session_state, get_quarter_months, get_month_name,
+    init_session_state, get_quarter_months, get_month_name,
     get_quarter_name, calculate_progress, format_goal_table_data,
     render_user_avatar, render_card, render_metric_card, render_progress_bar,
     render_feedback_card, validate_goal_data
 )
-
-
-
 # Initialize session state and database
 init_session_state()
 db = Database()
-apply_theme()
-
 # IST Timezone
 IST = pytz.timezone('Asia/Kolkata')
-
-# Initialize session state and database
-init_session_state()
-db = Database()
-apply_theme()
-
-# IST Timezone
-IST = pytz.timezone('Asia/Kolkata')
-
-
 
 # ============================================
 # SESSION PERSISTENCE
@@ -1744,7 +1753,7 @@ def get_week_for_date(year, month, target_date):
 # ============================================
 def login_page():
     """Display login page with forgot password option"""
-    st.markdown("<h1 style='text-align: center;'>🎯 Performance Management System</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'> Performance Management System</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: #64748b;'>Sign in to continue</p>", unsafe_allow_html=True)
     
     # Check if showing forgot password or reset password
@@ -1760,8 +1769,8 @@ def login_page():
         # ===== NORMAL LOGIN FORM =====
         if not st.session_state.show_forgot_password and not st.session_state.show_reset_password:
             with st.form("login_form"):
-                email = st.text_input("📧 Email", placeholder="your@email.com")
-                password = st.text_input("🔒 Password", type="password", placeholder="••••••••")
+                email = st.text_input(" Email", placeholder="your@email.com")
+                password = st.text_input("Password", type="password", placeholder="••••••••")
                 submit = st.form_submit_button("Sign In", use_container_width=True)
                 
                 if submit:
@@ -1774,14 +1783,14 @@ def login_page():
                             st.success("✅ Login successful!")
                             st.rerun()
                         else:
-                            st.error("❌ Invalid credentials")
+                            st.error(" Invalid credentials")
                     else:
-                        st.warning("⚠️ Please enter both email and password")
+                        st.warning(" Please enter both email and password")
             
             # Forgot Password Link
             col_fp1, col_fp2, col_fp3 = st.columns([1, 2, 1])
             with col_fp2:
-                if st.button("🔑 Forgot Password?", use_container_width=True):
+                if st.button(" Forgot Password?", use_container_width=True):
                     st.session_state.show_forgot_password = True
                     st.rerun()
             
@@ -1789,11 +1798,11 @@ def login_page():
         
         # ===== FORGOT PASSWORD FORM =====
         elif st.session_state.show_forgot_password:
-            st.markdown("### 🔑 Forgot Password")
+            st.markdown("###  Forgot Password")
             st.info("Enter your email address and we'll send you a reset token.")
             
             with st.form("forgot_password_form"):
-                reset_email = st.text_input("📧 Email Address", placeholder="your@email.com")
+                reset_email = st.text_input("Email Address", placeholder="your@email.com")
                 submit_reset = st.form_submit_button("Send Reset Token", use_container_width=True)
                 
                 if submit_reset:
@@ -1826,18 +1835,18 @@ def login_page():
         
         # ===== RESET PASSWORD FORM =====
         elif st.session_state.show_reset_password:
-            st.markdown("### 🔒 Reset Password")
+            st.markdown("### Reset Password")
             st.info("Enter the reset token you received via email and your new password.")
             
             with st.form("reset_password_form"):
-                reset_token = st.text_input("🎫 Reset Token", placeholder="Enter 8-character token")
-                new_password = st.text_input("🔒 New Password", type="password", placeholder="••••••••", key="login_new_pass")
+                reset_token = st.text_input("Reset Token", placeholder="Enter 8-character token")
+                new_password = st.text_input(" New Password", type="password", placeholder="••••••••", key="login_new_pass")
                 
                 # Password strength meter
                 if new_password:
                     render_password_strength_meter(new_password, "login_reset")
                 
-                confirm_password = st.text_input("🔒 Confirm Password", type="password", placeholder="••••••••", key="login_confirm_pass")
+                confirm_password = st.text_input("Confirm Password", type="password", placeholder="••••••••", key="login_confirm_pass")
                 submit_new_password = st.form_submit_button("Reset Password", use_container_width=True)
                 
                 if submit_new_password:
@@ -1848,7 +1857,7 @@ def login_page():
                                 score, _, strength, _ = check_password_strength(new_password)
                                 
                                 if score < 30:
-                                    st.warning(f"⚠️ Your password is {strength}. Consider making it stronger for better security.")
+                                    st.warning(f" Your password is {strength}. Consider making it stronger for better security.")
                                 
                                 # Reset password
                                 if db.reset_password_with_token(reset_token, new_password):
@@ -1883,11 +1892,11 @@ def display_dashboard():
         st.warning("⚠️ Session expired. Please login again.")
         st.rerun()
 
-    st.title("📊 Dashboard")
+    st.title(" Dashboard")
     if 'display_auto_complete_banner' in globals():
         display_auto_complete_banner()
     # User Stats Section - Now in Dashboard
-    st.subheader("📈 Your Performance")
+    st.subheader(" Your Performance")
     stats = db.get_user_goal_stats(user['id'])
     
     col_stat1, col_stat2, col_stat3, col_stat4 = st.columns(4)
@@ -1908,7 +1917,7 @@ def display_dashboard():
         total_employees = len([u for u in all_users if u['role'] == 'Employee'])
         total_managers = len([u for u in all_users if u['role'] == 'Manager'])
         
-        st.subheader("🏢 Organization Overview")
+        st.subheader(" Organization Overview")
         
         # Stats Row
         col1, col2, col3, col4 = st.columns(4)
@@ -1925,7 +1934,7 @@ def display_dashboard():
         st.markdown("---")
         
         # Employee Rankings
-        st.subheader("🏆 Employee Performance Rankings")
+        st.subheader(" Employee Performance Rankings")
         rankings = []
         for emp in [u for u in all_users if u['role'] == 'Employee']:
             emp_stats = db.get_user_goal_stats(emp['id'])
@@ -1938,21 +1947,21 @@ def display_dashboard():
                     'Progress %': f"{emp_stats.get('avg_progress', 0):.1f}%",
                     'Progress_Val': emp_stats.get('avg_progress', 0)
                 })
-        
+
         if rankings:
             df_rank = pd.DataFrame(rankings)
             df_rank = df_rank.sort_values('Progress_Val', ascending=False)
             df_rank = df_rank.drop('Progress_Val', axis=1)
             df_rank.insert(0, 'Rank', range(1, len(df_rank) + 1))
-            st.dataframe(df_rank, use_container_width=True)
-        
-        # Enhanced Charts (keep existing chart code)
-        # ...
+            
+            # 🔥 Hide the dataframe index
+            st.dataframe(df_rank, use_container_width=True, hide_index=True)
+
         
     elif role == 'Manager':
         team_members = db.get_team_members(user['id'])
         
-        st.subheader("👥 Team Overview")
+        st.subheader(" Team Overview")
         
         col1, col2, col3 = st.columns(3)
         with col1:
@@ -1967,7 +1976,7 @@ def display_dashboard():
         display_team_rankings_dashboard(user['id'])
 
         st.markdown("---")
-        st.subheader("👥 Team Performance")
+        st.subheader(" Team Performance")
         
         team_perf = []
         for member in team_members:
@@ -1988,7 +1997,7 @@ def display_dashboard():
     
     # Enhanced Notifications with Week Deadlines
     st.markdown("---")
-    st.subheader("🔔 Reminders & Notifications")
+    st.subheader(" Reminders & Notifications")
 
     notifications = get_enhanced_notifications(user)
     if notifications:
@@ -2280,10 +2289,10 @@ def display_view_all_goals():
     role = user['role']
     
     if not user:
-        st.warning("⚠️ Session expired. Please login again.")
+        st.warning("Session expired. Please login again.")
         st.rerun()
 
-    st.title("📋 View All Goals")
+    st.title(" View All Goals")
     
     # Select user (HR can see all, Manager can see team, Employee sees own)
     if role == 'HR':
@@ -2380,12 +2389,12 @@ def display_view_all_goals():
             col_edit, col_delete, col_space = st.columns([1, 1, 3])
             
             with col_edit:
-                if st.button("✏️ Edit", key=f"edit_goal_{goal['goal_id']}", use_container_width=True):
+                if st.button(" Edit", key=f"edit_goal_{goal['goal_id']}", use_container_width=True):
                     st.session_state.editing_goal = goal
                     st.rerun()
             
             with col_delete:
-                if st.button("🗑️ Delete", key=f"delete_goal_{goal['goal_id']}", use_container_width=True):
+                if st.button(" Delete", key=f"delete_goal_{goal['goal_id']}", use_container_width=True):
                     if db.delete_goal(goal['goal_id']):
                         st.success("Goal deleted!")
                         st.rerun()
@@ -2393,7 +2402,7 @@ def display_view_all_goals():
     # Edit Goal Modal
     if 'editing_goal' in st.session_state:
         st.markdown("---")
-        st.subheader("✏️ Edit Goal")
+        st.subheader(" Edit Goal")
         
         edit_goal = st.session_state.editing_goal
         
@@ -2415,7 +2424,7 @@ def display_view_all_goals():
             col_save, col_cancel = st.columns(2)
             
             with col_save:
-                if st.form_submit_button("💾 Save Changes", use_container_width=True):
+                if st.form_submit_button(" Save Changes", use_container_width=True):
                     updates = {
                         'vertical': new_vertical,
                         'goal_title': new_title,
@@ -2445,14 +2454,14 @@ def display_hr_info():
     user = st.session_state.user
     
     if not user:
-        st.warning("⚠️ Session expired. Please login again.")
+        st.warning(" Session expired. Please login again.")
         st.rerun()
 
     if user['role'] != 'HR':
-        st.warning("⚠️ Only HR can access this page")
+        st.warning(" Only HR can access this page")
         return
     
-    st.title("🏢 HR Information Dashboard")
+    st.title(" HR Information Dashboard")
     
     all_users = db.get_all_users()
     
@@ -2522,7 +2531,7 @@ def display_hr_info():
                 )
 
             with col_del2:
-                if st.button("🗑️ Delete Selected User", type="primary", use_container_width=True):
+                if st.button("Delete Selected User", type="primary", use_container_width=True):
                     # Save selected user in session state (so Streamlit remembers after rerun)
                     user_email = delete_user_select.split(' - ')[1]
                     delete_user_obj = next(u for u in deletable_users if u['email'] == user_email)
@@ -2725,7 +2734,7 @@ def display_employees_page():
     # Search and Filter
     col1, col2 = st.columns([2, 1])
     with col1:
-        search = st.text_input("🔍 Search by name or email", "")
+        search = st.text_input("Search by name or email", "")
     with col2:
         filter_dept = st.selectbox("Filter by Department", ["All"] + list(set([e.get('department', 'N/A') for e in employees])))
     
@@ -2835,7 +2844,7 @@ def display_employees_page():
             col_save, col_cancel = st.columns(2)
             
             with col_save:
-                if st.form_submit_button("💾 Save Changes", use_container_width=True):
+                if st.form_submit_button("Save Changes", use_container_width=True):
                     if new_name and new_email and new_role:
                         manager_id = None
                         if selected_manager != "None":
@@ -2894,7 +2903,7 @@ def display_employees_page():
         
         # Get stats
         emp_goals = db.get_user_all_goals(del_emp['id'])
-        st.warning(f"📊 This will delete **{len(emp_goals)} goals** associated with this employee")
+        st.warning(f"This will delete **{len(emp_goals)} goals** associated with this employee")
         
         confirm = st.checkbox("I understand this action cannot be undone", key="confirm_emp_delete")
         
@@ -3092,7 +3101,7 @@ def display_my_goals():
         st.session_state.page = 'login'
         st.rerun()
     
-    st.title(f"📅 My Goals - {user['name']}")
+    st.title(f" My Goals - {user['name']}")
     st.caption(f"{user.get('designation', 'Employee')} • {user['role']}")
     
     # Month Quick Search
@@ -3109,7 +3118,7 @@ def display_my_goals():
     if search_month != "None":
         month_num = [get_month_name(i) for i in range(1, 13)].index(search_month) + 1
         
-        st.subheader(f"📅 {search_month} Goals Across All Years")
+        st.subheader(f" {search_month} Goals Across All Years")
         
         all_goals = db.get_user_all_goals(user['id'])
         month_goals = [g for g in all_goals if g.get('month') == month_num]
@@ -3124,7 +3133,7 @@ def display_my_goals():
                 year_groups[year].append(goal)
             
             for year in sorted(year_groups.keys(), reverse=True):
-                with st.expander(f"📅 {search_month} {year} ({len(year_groups[year])} goals)"):
+                with st.expander(f"{search_month} {year} ({len(year_groups[year])} goals)"):
                     for goal in year_groups[year]:
                         progress = calculate_progress(
                             goal.get('monthly_achievement', 0),
@@ -3160,7 +3169,7 @@ def display_my_goals():
     if current_year not in years:
         years[current_year] = ""
     
-    st.subheader("📆 Browse by Year")
+    st.subheader(" Browse by Year")
     
     # Add Create New Year button
     col_header1, col_header2 = st.columns([3, 1])
@@ -3208,7 +3217,7 @@ def display_my_goals():
         
         st.markdown(f"""
         <div class='hierarchy-card' style='cursor: pointer;'>
-            <h2 style='margin:0;'>📅 {year} <span style='color: #64748b; font-size: 16px;'>({goal_count} goals)</span></h2>
+            <h2 style='margin:0;'> {year} <span style='color: #64748b; font-size: 16px;'>({goal_count} goals)</span></h2>
             <p style='color: #64748b; margin-top: 8px;'>{summary[:80] if summary else 'Click to view quarters'}</p>
         </div>
         """, unsafe_allow_html=True)
@@ -3265,7 +3274,7 @@ def display_quarter_selection():
                 st.session_state.page = 'employee_goals'
                 st.rerun()
         with col2:
-            st.title(f"📊 {emp['name']}'s Year {year} - Quarters")
+            st.title(f"{emp['name']}'s Year {year} - Quarters")
         user_id = emp['id']
     else:
         col1, col2 = st.columns([1, 5])
@@ -3289,6 +3298,7 @@ def display_quarter_selection():
             quarter_goals = [g for g in db.get_user_all_goals(user_id) if g['year'] == year and g.get('quarter') == quarter]
             goal_count = len(quarter_goals)
             
+            st.markdown(f"<div class='q-btn-wrapper-{quarter}'>", unsafe_allow_html=True)
             st.markdown(f"""
             <div class='hierarchy-card'>
                 <h2>📈 Quarter {quarter} <span style='color: #64748b; font-size: 14px;'>({goal_count} goals)</span></h2>
@@ -3297,11 +3307,13 @@ def display_quarter_selection():
             </div>
             """, unsafe_allow_html=True)
             
-            if st.button(f"Open Q{quarter}", key=f"q_{quarter}", use_container_width=True):
+            if st.button(f"Open Q{quarter}", key=f"q_{quarter}", use_container_width=True,  type="primary" ):
                 st.session_state.selected_quarter = quarter
                 st.session_state.page = 'employee_months' if st.session_state.get('viewing_employee_year') else 'months'
                 st.rerun()
             
+            # 🔹 Close wrapper
+            st.markdown("</div>", unsafe_allow_html=True)
             # Only show edit for own goals
             if not st.session_state.get('viewing_employee_year'):
                 with st.expander(f"✏️ Edit Q{quarter} Summary"):
@@ -3340,7 +3352,7 @@ def display_month_selection():
                 st.session_state.page = 'employee_quarters'
                 st.rerun()
         with col2:
-            st.title(f"📅 {emp['name']}'s Year {year} - Q{quarter} - Months")
+            st.title(f" {emp['name']}'s Year {year} - Q{quarter} - Months")
         user_id = emp['id']
     else:
         col1, col2 = st.columns([1, 5])
@@ -3349,7 +3361,7 @@ def display_month_selection():
                 st.session_state.page = 'quarters'
                 st.rerun()
         with col2:
-            st.title(f"📅 Year {year} - Q{quarter} - Months")
+            st.title(f" Year {year} - Q{quarter} - Months")
         user_id = user['id']
     
     quarter_month_nums = get_quarter_months(quarter)
@@ -3366,7 +3378,7 @@ def display_month_selection():
             st.markdown(f"""
             <div class='month-card'>
                 <div class='month-card-content'>
-                    <h2>📆 {month_name}</h2>
+                    <h2> {month_name}</h2>
                     <p>{goal_count} goals</p>
                 </div>
             </div>
@@ -3421,7 +3433,7 @@ def display_month_goals():
                 st.session_state.page = 'employee_months'
                 st.rerun()
         with col2:
-            st.title(f"📊 {emp['name']}'s {month_name} {year} Goals")
+            st.title(f" {emp['name']}'s {month_name} {year} Goals")
         display_user = emp
     else:
         col1, col2 = st.columns([1, 5])
@@ -3430,7 +3442,7 @@ def display_month_goals():
                 st.session_state.page = 'months'
                 st.rerun()
         with col2:
-            st.title(f"📊 {month_name} {year} Goal Sheet")
+            st.title(f"{month_name} {year} Goal Sheet")
         display_user = user
     
     # Create tabs
@@ -3736,173 +3748,182 @@ def display_monthly_view(user, year, quarter, month):
         
         # Display with better styling using custom HTML/CSS
         st.markdown("""
-        <style>
-        .excel-table {
-            width: 100%;
-            overflow-x: auto;
-        }
+<style>
 
-        /* Table Base */
-        .excel-table table {
-            border-collapse: collapse;
-            width: 100%;
-            font-size: 13px;
-            background-color: #ffffff;
-            color: #222222;
-            border: 1px solid #ddd;
-        }
+.excel-table {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 10px;
+}
 
-        /* Unified Header Styling */
-        .excel-table th,
-        .excel-table .section-header {
-            background-color: #3B82F6;
-            color: #ffffff;
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #cfcfcf;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
+/* Table Base */
+.excel-table table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 13px;
+    background: #ffffff;
+    color: #1e293b;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
 
-        /* Table Cells */
-        .excel-table td {
-            border: 1px solid #e0e0e0;
-            padding: 8px;
-            text-align: center;
-            background-color: #ffffff;
-            vertical-align: middle;
-        }
+/* Header */
+.excel-table th,
+.excel-table .section-header {
+    background: linear-gradient(180deg, #3b82f6, #2563eb);
+    color: white;
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #2563eb;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    text-transform: uppercase;
+    font-size: 12px;
+}
 
-        /* Target columns */
-        .excel-table .target-col {
-            background-color: #F3F8FF;
-        }
+/* Table Cells */
+.excel-table td {
+    border: 1px solid #e5e7eb;
+    padding: 10px;
+    text-align: center;
+    background-color: #ffffff;
+    vertical-align: middle;
+    transition: background 0.2s ease;
+}
 
-        /* Achievement columns */
-        .excel-table .achievement-col {
-            background-color: #F6FFF8;
-        }
+/* Target columns */
+.excel-table .target-col {
+    background-color: #eef5ff;
+}
 
-        /* Monthly Achievement */
-        .excel-table .monthly-achievement-col {
-            background-color: #E9FCEB;
-            font-weight: bold;
-        }
+/* Achievement columns */
+.excel-table .achievement-col {
+    background-color: #edfdf4;
+}
 
-        /* Remarks columns */
-        .excel-table .remarks-col {
-            background-color: #FFFDF4;
-            color: #444;
-            word-wrap: break-word;
-            max-width: 180px;
-        }
+/* Monthly Achievement */
+.excel-table .monthly-achievement-col {
+    background-color: #dffbe7;
+    font-weight: 700;
+    color: #166534;
+}
 
-        /* Dates aligned */
-        .excel-table td:nth-child(5),
-        .excel-table td:nth-child(6) {
-            text-align: center;
-            white-space: nowrap;
-            font-size: 12px;
-            color: #333;
-        }
+/* Remarks columns */
+.excel-table .remarks-col {
+    background-color: #fffceb;
+    color: #444;
+    word-wrap: break-word;
+    max-width: 220px;
+    line-height: 1.4;
+}
 
-        /* Hover effect */
-        .excel-table tr:hover td {
-            background-color: #F9FAFB;
-        }
+/* Date Columns */
+.excel-table td:nth-child(5),
+.excel-table td:nth-child(6) {
+    text-align: center;
+    white-space: nowrap;
+    font-size: 12px;
+    color: #475569;
+}
 
-        /* Bold key columns */
-        .excel-table th,
-        .excel-table td:first-child,
-        .excel-table td:nth-child(2) {
-            font-weight: 500;
-        }
+/* Hover Row */
+.excel-table tr:hover td {
+    background-color: #f8fafc;
+}
 
-        /* Clean borders */
-        .excel-table table,
-        .excel-table th,
-        .excel-table td {
-            border: 1px solid #e6e6e6;
-        }
+/* Bold key columns */
+.excel-table th,
+.excel-table td:first-child,
+.excel-table td:nth-child(2) {
+    font-weight: 600;
+}
 
-        /* Goal title button styling */
-        .goal-title-btn {
-            background: none;
-            border: none;
-            color: #3B82F6;
-            text-decoration: underline;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 0;
-            font-size: inherit;
-        }
+/* Goal title button */
+.goal-title-btn {
+    background: none;
+    border: none;
+    color: #2563eb;
+    text-decoration: underline;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+    transition: color 0.2s ease;
+}
 
-        .goal-title-btn:hover {
-            color: #1E40AF;
-        }
+.goal-title-btn:hover {
+    color: #1e40af;
+}
 
-        /* Modal styling */
-        .goal-modal {
-            display: none;
-            position: fixed;
-            z-index: 10000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            overflow: auto;
-        }
+/* Modal styling */
+.goal-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15,23,42,0.55);
+    backdrop-filter: blur(4px);
+    overflow: auto;
+}
 
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border-radius: 10px;
-            width: 80%;
-            max-width: 600px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            position: relative;
-            animation: slideIn 0.3s ease-out;
-        }
+.modal-content {
+    background-color: #ffffff;
+    margin: 6% auto;
+    padding: 26px;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 650px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    position: relative;
+    animation: slideIn 0.3s ease-out;
+}
 
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+@keyframes slideIn {
+    from { transform: translateY(-40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
 
-        .close-btn {
-            position: absolute;
-            right: 15px;
-            top: 15px;
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 8px 15px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 18px;
-        }
+.close-btn {
+    position: absolute;
+    right: 18px;
+    top: 18px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.2s ease;
+}
 
-        .close-btn:hover {
-            background: #dc2626;
-        }
+.close-btn:hover {
+    background: #dc2626;
+}
 
-        /* Responsive styling */
-        @media (max-width: 768px) {
-            .excel-table table {
-                font-size: 11px;
-            }
-            .excel-table th,
-            .excel-table td {
-                padding: 6px;
-            }
-        }
-        </style>
-        """, unsafe_allow_html=True)
+/* Responsive */
+@media (max-width: 768px) {
+    .excel-table table {
+        font-size: 11px;
+    }
+    .excel-table th,
+    .excel-table td {
+        padding: 6px;
+    }
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 
         # Store the complete HTML in a variable for components
         complete_html = f'''
@@ -4776,7 +4797,7 @@ def display_week_view(user, year, quarter, month, week_num):
         st.session_state.page = 'dashboard'
         st.rerun()
     month_name = get_month_name(month)
-    st.subheader(f"📅 Week {week_num} - {month_name} {year}")
+    st.subheader(f" Week {week_num} - {month_name} {year}")
     
     # Get monthly goals to show breakdown
     monthly_goals = db.get_month_goals(user['id'], year, quarter, month)
@@ -4806,7 +4827,7 @@ def display_week_view(user, year, quarter, month, week_num):
         
         # Show detailed goal cards with remarks
         st.markdown("---")
-        st.markdown("**📊 Goal Details**")
+        st.markdown("**Goal Details**")
         
         for goal in monthly_goals:
             week_target = goal.get(f'week{week_num}_target', 0)
@@ -4907,7 +4928,7 @@ def display_week_view(user, year, quarter, month, week_num):
                 # Add remarks field for week-specific goals
                 new_remarks = st.text_area(f"Week {week_num} Remarks", value=edit_week_goal.get(f'week{week_num}_remarks', ''), height=100)
                 
-                if st.form_submit_button("💾 Save Changes", use_container_width=True):
+                if st.form_submit_button(" Save Changes", use_container_width=True):
                     if new_title:
                         updates = {
                             'vertical': new_vertical,
@@ -5169,7 +5190,7 @@ def display_feedback_section(goals, level):
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.markdown("**👔 Manager Feedback**")
+        st.markdown("**Manager Feedback**")
         if manager_fb:
             for fb in manager_fb:
                 render_feedback_card(fb, 'Manager')
@@ -5177,7 +5198,7 @@ def display_feedback_section(goals, level):
             st.caption("No manager feedback yet")
     
     with col2:
-        st.markdown("**🏢 HR Feedback**")
+        st.markdown("** HR Feedback**")
         if hr_fb:
             for fb in hr_fb:
                 render_feedback_card(fb, 'HR')
@@ -5185,7 +5206,7 @@ def display_feedback_section(goals, level):
             st.caption("No HR feedback yet")
     
     with col3:
-        st.markdown("**👤 Self Appraisal**")
+        st.markdown("** Self Appraisal**")
         if self_fb:
             for fb in self_fb:
                 render_feedback_card(fb, 'Self Appraisal')
@@ -5674,23 +5695,23 @@ def render_sidebar():
         st.markdown("---")
         
         # Navigation Menu
-        st.markdown("**📋 Menu**")
+        st.markdown(" Menu")
         
-        if st.button("🏠 Dashboard", use_container_width=True, key="nav_dashboard"):
+        if st.button(" Dashboard", use_container_width=True, key="nav_dashboard"):
             st.session_state.page = 'dashboard'
             st.session_state.pop('viewing_employee', None)
             st.session_state.pop('viewing_employee_year', None)
             save_session_to_storage()
             st.rerun()
         
-        if st.button("🎯 My Goals", use_container_width=True, key="nav_my_goals"):
+        if st.button(" My Goals", use_container_width=True, key="nav_my_goals"):
             st.session_state.page = 'my_goals'
             st.session_state.pop('viewing_employee', None)
             st.session_state.pop('viewing_employee_year', None)
             save_session_to_storage()
             st.rerun()
         
-        if st.button("📋 View All Goals", use_container_width=True, key="nav_view_all_goals"):
+        if st.button(" View All Goals", use_container_width=True, key="nav_view_all_goals"):
             st.session_state.page = 'view_all_goals'
             st.session_state.pop('viewing_employee', None)
             st.session_state.pop('viewing_employee_year', None)
@@ -5700,7 +5721,7 @@ def render_sidebar():
 
         # Role-specific navigation
         if role in ['HR', 'Manager']:
-            if st.button("👥 Employees", use_container_width=True, key="nav_employees"):
+            if st.button(" Employees", use_container_width=True, key="nav_employees"):
                 st.session_state.page = 'employees'
                 st.session_state.pop('viewing_employee', None)
                 st.session_state.pop('viewing_employee_year', None)
@@ -5708,14 +5729,14 @@ def render_sidebar():
                 st.rerun()
         
         if role == 'HR':
-            if st.button("⚙️ Employee Management", use_container_width=True, key="nav_emp_mgmt"):
+            if st.button(" Employee Management", use_container_width=True, key="nav_emp_mgmt"):
                 st.session_state.page = 'employee_management'
                 st.session_state.pop('viewing_employee', None)
                 st.session_state.pop('viewing_employee_year', None)
                 save_session_to_storage()
                 st.rerun()
             
-            if st.button("🏢 HR Info", use_container_width=True, key="nav_hr_info"):
+            if st.button("HR Info", use_container_width=True, key="nav_hr_info"):
                 st.session_state.page = 'hr_info'
                 st.session_state.pop('viewing_employee', None)
                 st.session_state.pop('viewing_employee_year', None)
@@ -5723,12 +5744,12 @@ def render_sidebar():
                 st.rerun()
         
         
-        if st.button("📊 Analytics", use_container_width=True, key="nav_analytics"):
+        if st.button(" Analytics", use_container_width=True, key="nav_analytics"):
             st.session_state.page = 'analytics'
             save_session_to_storage()
             st.rerun()
 
-        if st.button("💬 Feedback History", use_container_width=True, key="nav_feedback"):
+        if st.button(" Feedback History", use_container_width=True, key="nav_feedback"):
             st.session_state.page = 'feedback_history'
             st.session_state.pop('viewing_employee', None)
             st.session_state.pop('viewing_employee_year', None)
@@ -5736,7 +5757,7 @@ def render_sidebar():
             st.rerun()
         
         if role == 'HR':
-            if st.button("🔐 Permissions", use_container_width=True, key="nav_permissions"):
+            if st.button(" Permissions", use_container_width=True, key="nav_permissions"):
                 st.session_state.page = 'permissions'
                 st.session_state.pop('viewing_employee', None)
                 st.session_state.pop('viewing_employee_year', None)
@@ -5745,9 +5766,9 @@ def render_sidebar():
         
         # Settings (Stats removed - now in dashboard)
         st.markdown("---")
-        st.markdown("**⚙️ Settings**")
+        st.markdown("Settings")
         
-        if st.button("👤 Profile", use_container_width=True, key="nav_profile"):
+        if st.button(" Profile", use_container_width=True, key="nav_profile"):
             st.session_state.page = 'profile'
             save_session_to_storage()
             st.rerun()
@@ -5756,11 +5777,12 @@ def render_sidebar():
         
         # Logout
         st.markdown("---")
-        if st.button("🚪 Logout", use_container_width=True):
+        if st.button(" Logout", use_container_width=True):
             st.query_params.clear()
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
+
 
 # ============================================
 # MAIN APPLICATION
